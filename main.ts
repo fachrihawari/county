@@ -18,7 +18,7 @@ const server = Bun.serve({
     if (pathname.startsWith('/api/count') && method === 'GET') return get(namespace, key)
     if (pathname.startsWith('/api/count/up') && method === 'POST') return up(namespace, key)
 
-    return Response.json({ message: "Not Found" })
+    return Response.json({ message: "Not Found" }, { status: 404 })
   }
 })
 
