@@ -1,9 +1,10 @@
 import { db } from "./db"
 
 const server = Bun.serve({
-  port: process.env.PORT || 3000,
+  port: Bun.env.PORT || 3000,
   static: {
-    '/': Response.json({ message: "county here!" })
+    '/': Response.json({ message: "county here!" }),
+    '/api/heartbeat': Response.json({ message: "OK" }),
   },
   fetch(request) {
     const { method } = request

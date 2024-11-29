@@ -1,0 +1,28 @@
+services:
+  web:
+    build: .
+    restart: always
+    expose:
+      - ${PORT}
+    environment:
+      PORT: ${PORT}
+      BUN_ENV: ${BUN_ENV} 
+      DB_PATH: ${DB_PATH} 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.county.rule=Host(`county.hawari.dev`)"
+      - "traefik.http.routers.county.entrypoints=websecure"
+      - "traefik.http.routers.county.tls.certresolver=letsencryptresolver"
+      - "traefik.http.services.county.loadbalancer.server.port=${PORT}"
+    healthcheck:
+      test: ["CMD-SHELL", "curl http://localhost:${PORT}/api/heartbeat"]
+      start_period: 60s
+      interval: 3600s
+      timeout: 5s
+      retries: 5
+    networks:
+      - traefik-network
+
+networks:
+  traefik-network:
+    external: true
