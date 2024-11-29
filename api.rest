@@ -1,0 +1,11 @@
+@hostname = http://localhost:3000
+@namespace = hawari.dev
+@key = posts-markdown
+
+### Retrive counter value
+GET {{hostname}}/api/count?namespace={{namespace}}&key={{key}}
+
+
+### Up counter value
+POST {{hostname}}/api/count/up?namespace={{namespace}}&key={{key}}
+

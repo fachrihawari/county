@@ -4,7 +4,7 @@ const server = Bun.serve({
   port: Bun.env.PORT || 3000,
   static: {
     '/': Response.json({ message: "county here!" }),
-    '/api/heartbeat': Response.json({ message: "OK" }),
+    '/api/heartbeat': Response.json({ message: "ok" }),
   },
   fetch(request) {
     const { method } = request
@@ -19,7 +19,7 @@ const server = Bun.serve({
     if (pathname.startsWith('/api/count') && method === 'GET') return get(namespace, key)
     if (pathname.startsWith('/api/count/up') && method === 'POST') return up(namespace, key)
 
-    return Response.json({ message: "Not Found" }, { status: 404 })
+    return Response.json({ message: "not found" }, { status: 404 })
   }
 })
 
@@ -28,6 +28,9 @@ console.log(`Server running at http://${server.hostname}:${server.port}`)
 function get(namespace: string, key: string) {
   const query = db.query('SELECT value FROM counter where namespace = :namespace and key = :key limit 1')
   const counter = query.get({ namespace, key }) as { value: number }
+
+  if (!counter) return Response.json({ message: "counter not found" }, { status: 404 })
+
   return Response.json({ count: counter.value })
 }
 
@@ -45,5 +48,5 @@ function up(namespace: string, key: string) {
       .run({ namespace, key })
   }
 
-  return Response.json("OK")
+  return Response.json({ message: 'ok' })
 }

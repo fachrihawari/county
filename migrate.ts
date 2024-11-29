@@ -1,5 +1,6 @@
 import { db } from "./db";
 
+console.log("Running migration to create table counter");
 const createTableQuery = `
   CREATE TABLE IF NOT EXISTS counter (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
