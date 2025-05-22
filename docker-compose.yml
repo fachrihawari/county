@@ -11,8 +11,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.county.rule=Host(`county.hawari.dev`)"
-      - "traefik.http.routers.county.entrypoints=websecure"
-      - "traefik.http.routers.county.tls.certresolver=letsencryptresolver"
+      - "traefik.http.routers.county.entrypoints=web"
       - "traefik.http.services.county.loadbalancer.server.port=${PORT}"
     healthcheck:
       test: ["CMD-SHELL", "curl http://localhost:${PORT}/api/heartbeat"]
