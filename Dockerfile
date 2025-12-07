@@ -1,5 +1,5 @@
 # Use the official Bun image as the base
-FROM oven/bun:1.1.37-alpine
+FROM oven/bun:1.3.4-alpine
 
 # Set the working directory
 WORKDIR /app
@@ -17,5 +17,5 @@ RUN bun install
 # Copy the rest of the application code
 COPY . .
 
-# Start the Next.js server
+# Start the bun server
 CMD bun start

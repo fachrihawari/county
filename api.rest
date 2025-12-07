@@ -1,6 +1,6 @@
 @hostname = http://localhost:3000
-@namespace = hawari.dev
-@key = posts-markdown
+@namespace = dummy.dev
+@key = posts-dummy
 
 ### Retrive counter value
 GET {{hostname}}/api/count?namespace={{namespace}}&key={{key}}

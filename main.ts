@@ -2,9 +2,14 @@ import { db } from "./db"
 
 const server = Bun.serve({
   port: Bun.env.PORT || 3000,
-  static: {
+  routes: {
     '/': Response.json({ message: "county here!" }),
-    '/api/heartbeat': Response.json({ message: "ok" }),
+    '/api/heartbeat': {
+      async GET() {
+        const result = await db`SELECT NOW() AS now LIMIT 1`
+        return Response.json({ status: "ok", time: result[0].now } )
+      }
+    }
   },
   fetch(request) {
     const { method } = request
@@ -25,27 +30,21 @@ const server = Bun.serve({
 
 console.log(`Server running at http://${server.hostname}:${server.port}`)
 
-function get(namespace: string, key: string) {
-  const query = db.query('SELECT value FROM counter where namespace = :namespace and key = :key limit 1')
-  const counter = query.get({ namespace, key }) as { value: number }
+async function get(namespace: string, key: string) {
+  const counters = await db`SELECT value FROM counter WHERE namespace = ${namespace} AND key = ${key} LIMIT 1`
 
-  if (!counter) return Response.json({ message: "counter not found" }, { status: 404 })
+  if (!counters.length) return Response.json({ message: "counter not found" }, { status: 404 })
 
-  return Response.json({ count: counter.value })
+  return Response.json({ count: counters[0].value })
 }
 
-function up(namespace: string, key: string) {
-  const query = db.query('SELECT value FROM counter where namespace = :namespace and key = :key limit 1')
-  const counter = query.get({ namespace, key })
+async function up(namespace: string, key: string) {
+  const counters = await db`SELECT value FROM counter WHERE namespace = ${namespace} AND key = ${key} LIMIT 1`
 
-  if (counter) {
-    db
-      .query('UPDATE counter SET value = value + 1 where namespace = :namespace and key = :key')
-      .run({ namespace, key })
+  if (counters.length > 0) {
+    await db`UPDATE counter SET value = value + 1 WHERE namespace = ${namespace} AND key = ${key}`
   } else {
-    db
-      .query('INSERT INTO counter (namespace, key, value) VALUES (:namespace, :key, 1)')
-      .run({ namespace, key })
+    await db`INSERT INTO counter (namespace, key, value) VALUES (${namespace}, ${key}, 1)`
   }
 
   return Response.json({ message: 'ok' })

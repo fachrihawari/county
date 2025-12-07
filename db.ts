@@ -1,9 +1,10 @@
-import { Database } from 'bun:sqlite'
+import { SQL } from "bun";
 
-const dbPath = Bun.env.DB_PATH
+const dbUrl = Bun.env.DATABASE_URL
 
-if (!dbPath) throw new Error("DB_PATH env variable is not set!")
+if (!dbUrl) throw new Error("DATABASE_URL env variable is not set!")
 
-export const db = new Database(dbPath, {
+export const db = new SQL({
+  url: dbUrl,
   strict: true
 })
