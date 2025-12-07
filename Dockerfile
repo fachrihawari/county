@@ -7,9 +7,9 @@ WORKDIR /app
 # add curl
 RUN apk update && apk add curl
 
-# Copy package.json and bun.lockb for faster installs
+# Copy package.json and bun.lock for faster installs
 COPY package.json ./
-COPY bun.lockb ./
+COPY bun.lock ./
 
 # Install dependencies
 RUN bun install
